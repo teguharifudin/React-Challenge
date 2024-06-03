@@ -1,25 +1,72 @@
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import SidebarDrawer from "./components/SidebarDrawer";
+import Navbar from "./components/Navbar";
+import About from "./components/About";
+import User from "./components/User";
+import Blogs from "./components/Blogs";
+import BlogsId from "./components/BlogsId";
+import Home from "./components/Home";
+import Login from "./components/Login";
+import PrivateRoute from "./components/PrivateRoute";
+import Error from "./components/Error";
+import { createBrowserRouter, Outlet } from "react-router-dom";
 
-function App() {
+export const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <React.Fragment>
+      <Navbar />
+      <SidebarDrawer />
+      <Outlet />
+    </React.Fragment>
   );
-}
+};
 
-export default App;
+export const appRouter = createBrowserRouter([
+  {
+    path: "/",
+    element: <App />,
+    errorElement: <Error />,
+    children: [
+      {
+        path: "/",
+        element: (
+          <PrivateRoute>
+            <Home />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "about",
+        element: <About />,
+      },
+      {
+        path: "user",
+        element: (
+          <PrivateRoute>
+            <User />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "blogs",
+        element: (
+          <PrivateRoute>
+            <Blogs />
+          </PrivateRoute>
+        ),
+      },
+      {
+        path: "blogs/:id",
+        element: (
+          <PrivateRoute>
+            <BlogsId />
+          </PrivateRoute>
+        ),
+      },
+    ],
+  },
+  {
+    path: "login",
+    element: <Login />,
+  },
+]);
